@@ -1,6 +1,6 @@
 #include "startinterface.h"
 #include "handler.h"
-#include "windows.h"
+#include "llkfile.h"
 #include <stdlib.h>
 #include <QDebug>
 #include <QApplication>
@@ -45,13 +45,55 @@ startInterface::startInterface()
     this->ban_volumn_img->setPos(260, 300);
     this->ban_volumn_img->setParentItem(settings_canvas);
     this->ban_volumn_img->hide();
-    this->arrow_img = new assemble("arrow", ":/system/img/", -10, -10, 90, 70);
-    this->arrow_img->setPos(62,176);
-    this->arrow_img->setParentItem(settings_canvas);
+    this->close_img = new assemble("close", ":/system/img/", -10, -10, 80, 80);
+    this->close_img->setPos(625,197);
+    this->close_img->setParentItem(settings_canvas);
+    this->close_img->setData(2, QVariant(0));
     this->home = new assemble("home", ":/system/img/", -10, -10, 140, 140);
     this->home->setPos(430, 300);
     this->home->setParentItem(settings_canvas);
     connect(hand, SIGNAL(modifyVolumn(bool)), this, SLOT(modifyVolumn(bool)));
+
+    //show score history
+    this->show_score_canvas = new llkcanvas("search", 150, 220, 500, 550);
+    this->show_score_canvas->setOpacity(0.9);
+    this->show_score_canvas->setColor(new QColor(255, 255, 255));
+    this->show_score_canvas->hide();
+    this->show_score_canvas->setZValue(4);
+    this->close_img_search = new assemble("close", ":/system/img/", -10, -10, 90, 70);
+    this->close_img_search->setPos(570,220);
+    this->close_img_search->setParentItem(show_score_canvas);
+    this->close_img_search->setData(2, QVariant(1));
+    this->search_score_text = new llkText(QString::fromLocal8Bit("排   行   榜"));
+    this->search_score_text->setSize(28);
+    this->search_score_text->setColor(new QColor(98, 81, 88));
+    this->search_score_text->setParentItem(show_score_canvas);
+    this->search_score_text->setPos(305, 280);
+    this->table_head = new llkText(QString::fromLocal8Bit("  名  次          得  分          关  卡"));
+    this->table_head->setSize(20);
+    this->table_head->setColor(new QColor(98, 81, 88));
+    this->table_head->setParentItem(show_score_canvas);
+    this->table_head->setPos(195, 340);
+    this->number1_text = new llkText(QString::fromLocal8Bit("第 一 名"));
+    this->number1_text->setColor(new QColor(98, 81, 88));
+    this->number1_text->setParentItem(show_score_canvas);
+    this->number1_text->setPos(195, 413);
+    this->number2_text = new llkText(QString::fromLocal8Bit("第 二 名"));
+    this->number2_text->setColor(new QColor(98, 81, 88));
+    this->number2_text->setParentItem(show_score_canvas);
+    this->number2_text->setPos(195, 486);
+    this->number3_text = new llkText(QString::fromLocal8Bit("第 三 名"));
+    this->number3_text->setColor(new QColor(98, 81, 88));
+    this->number3_text->setParentItem(show_score_canvas);
+    this->number3_text->setPos(195, 559);
+    this->number4_text = new llkText(QString::fromLocal8Bit("第 四 名"));
+    this->number4_text->setColor(new QColor(98, 81, 88));
+    this->number4_text->setParentItem(show_score_canvas);
+    this->number4_text->setPos(195, 632);
+    this->number5_text = new llkText(QString::fromLocal8Bit("第 五 名"));
+    this->number5_text->setColor(new QColor(98, 81, 88));
+    this->number5_text->setParentItem(show_score_canvas);
+    this->number5_text->setPos(195, 705);
 
     //game over
 
@@ -70,8 +112,13 @@ startInterface::startInterface()
     this->game_over_text = new llkText(QString::fromLocal8Bit("通 关 失 败 ！"));
     this->game_over_text->setColor(new QColor(98, 81, 88));
     this->game_over_text->setSize(28);
-    this->game_over_text->setPos(300, 390);
+    this->game_over_text->setPos(300, 360);
     this->game_over_text->setParentItem(game_over_canvas);
+    this->show_score_text = new llkText(QString::fromLocal8Bit("您的得分：000"));
+    this->show_score_text->setColor(new QColor(98, 81, 88));
+    this->show_score_text->setSize(15);
+    this->show_score_text->setPos(330, 410);
+    this->show_score_text->setParentItem(game_over_canvas);
 
     //game pass
 
@@ -98,9 +145,9 @@ startInterface::startInterface()
     connect(hand, SIGNAL(toNextCheckpoint()), this, SLOT(toNextCheckpoint()));
 
     //after start game
-    this->time = 60;
+    this->time = 0;
     this->score = 0;
-    this->grade = 6;
+    this->grade = 1;
     this->order1_tips = -1;
     this->order2_tips = -1;
     this->disapearTimes = new QTimer;
@@ -121,25 +168,25 @@ startInterface::startInterface()
     this->grade_text->setPos(325, 70);
     this->grade_text->setParentItem(game_canvas);
     this->refresh = new assemble("refresh", ":/system/img/", -10, -10, 80, 80);
-    this->refresh->setPos(720,175);
+    this->refresh->setPos(720,190);
     this->refresh->setParentItem(game_canvas);
     this->refresh_disabled = new assemble("refresh_disabled", ":/system/img/", -10, -10, 80, 80, false);
-    this->refresh_disabled->setPos(720,175);
+    this->refresh_disabled->setPos(720,190);
     this->refresh_disabled->setParentItem(game_canvas);
     this->refresh_disabled->hide();
     this->tip = new assemble("tip", ":/system/img/", -10, -10, 80, 80);
-    this->tip->setPos(720,375);
+    this->tip->setPos(720,390);
     this->tip->setParentItem(game_canvas);
     this->tip_disabled = new assemble("tip_disabled", ":/system/img/", -10, -10, 80, 80, false);
-    this->tip_disabled->setPos(720,375);
+    this->tip_disabled->setPos(720,390);
     this->tip_disabled->setParentItem(game_canvas);
     this->tip_disabled->hide();
     this->boom = new assemble("boom", ":/system/img/", -10, -10, 80, 80);
-    this->boom->setPos(720,575);
+    this->boom->setPos(720,590);
     this->boom->setParentItem(game_canvas);
     this->boom->setData(1, QVariant(false)); //false代表未点击
     this->boom_disabled = new assemble("boom_disabled", ":/system/img/", -10, -10, 80, 80, false);
-    this->boom_disabled->setPos(720,575);
+    this->boom_disabled->setPos(720,590);
     this->boom_disabled->setParentItem(game_canvas);
     this->boom_disabled->hide();
     this->setGameStart(false);
@@ -150,6 +197,7 @@ startInterface::startInterface()
 
     //system
     this->ptimer = new QTimer;
+    this->ban_click = false;
     this->bgm = new QSound(QCoreApplication::applicationDirPath() + "/audio/bgm.wav");
     this->setMusicOn(true);
     connect(this->ptimer, SIGNAL(timeout()), this, SLOT(gameUpdate()));
@@ -177,35 +225,21 @@ void startInterface::initStartInterface()
     this->addItem(settings);
     //settings
     this->addItem(settings_canvas);
-//    this->addItem(volumn_img);
-//    this->addItem(ban_volumn_img);
-//    this->addItem(arrow_img);
     //game over
     this->addItem(game_over_canvas);
-//    this->addItem(game_over_text);
-//    this->addItem(game_home1);
-//    this->addItem(play_again);
     //game pass
     this->addItem(game_pass_canvas);
-//    this->addItem(game_pass_text);
-//    this->addItem(next_checkpoint);
-//    this->addItem(game_home2);
     //play interface
     this->addItem(game_canvas);
-//    this->addItem(time_text);
-//    this->addItem(score_text);
-//    this->addItem(refresh);
-//    this->addItem(refresh_disabled);
-//    this->addItem(tip);
-//    this->addItem(tip_disabled);
-//    this->addItem(boom);
-//    this->addItem(boom_disabled);
+    //search interface
+    this->addItem(show_score_canvas);
 
     setStartInterface();
 }
 
 void startInterface::toHomepage(int from)
 {
+    this->score = 0;
     this->game_canvas->hide();
     setStartInterface();
     if(from == 0)
@@ -217,6 +251,7 @@ void startInterface::toHomepage(int from)
     if(this->isGameStart())
         resetGameScene();
     this->setGameStart(false);
+    this->ban_click = false;
 }
 
 void startInterface::removeStartButtons()
@@ -229,15 +264,63 @@ void startInterface::removeStartButtons()
 
 void startInterface::setSettingInterface()
 {
+    if(this->isGameStart())
+    {
+        this->ban_click = false;
+        this->ptimer->stop();
+        turn_around(true);
+    }
     this->settings_canvas->show();
     this->start_btn->setAcceptHoverEvents(false);
     this->search_btn->setAcceptHoverEvents(false);
     this->exit_btn->setAcceptHoverEvents(false);
+    this->close_img_search->setAcceptHoverEvents(false);
 }
 
 void startInterface::removeSettingButtons()
 {
+    if(this->isGameStart())
+    {
+        this->ptimer->start(1000);
+        this->ban_click = true;
+        turn_around(false);
+    }
     this->settings_canvas->hide();
+    this->start_btn->setAcceptHoverEvents(true);
+    this->search_btn->setAcceptHoverEvents(true);
+    this->exit_btn->setAcceptHoverEvents(true);
+    this->close_img_search->setAcceptHoverEvents(true);
+}
+
+void startInterface::turn_around(bool back)
+{
+    QList<int> orders = remainOrders;
+    for(int i = 0; i < 8; i++)
+    {
+        for(int j = 0; j < 8; j++)
+        {
+            if(this->squareArray[j][i] == 1)
+            {
+                if(back)
+                {
+                    int order = this->findOrderByIJ(i, j);
+                    this->square[order]->setPixmap(QPixmap(":/square/img/pokemon/back.png"));
+                }
+                else
+                {
+                    int order = this->findOrderByIJ(i, j);
+                    int index = this->square[order]->data(0).toInt();
+                    this->square[order]->setPixmap(QPixmap(getPath(index)));
+                }
+            }
+        }
+    }
+    findIfThereIsAPair();
+}
+
+void startInterface::removeSearchpage()
+{
+    this->show_score_canvas->hide();
     this->start_btn->setAcceptHoverEvents(true);
     this->search_btn->setAcceptHoverEvents(true);
     this->exit_btn->setAcceptHoverEvents(true);
@@ -253,20 +336,25 @@ void startInterface::start()
         this->bgm->play();
     }
     this->ptimer->start(1000);
-
+    this->time = 100 - ((this->grade - 1) / 6) * 20;
+    resetGameScene();
+    resetGameText();
     removeStartButtons();
     this->setGameStart(true);
     resetSquareArray();
     setSquares();
+    this->ban_click = true;
 }
 
 void startInterface::resetGameScene()
 {
-    qDebug() << "hear";
-    for(int i = 0; i < 64; i++)
+    if(this->remainOrders.count() > 0)
     {
-        this->removeItem(this->square[i]);
-        this->square[i] = 0;
+        for(int i = 0; i < 64; i++)
+        {
+            this->removeItem(this->square[i]);
+            this->square[i] = 0;
+        }
     }
     resetSquareArray();
     this->refresh->show();
@@ -287,12 +375,16 @@ void startInterface::resetGameScene()
 void startInterface::playAgain()
 {
     resetGameScene();
+    this->time = 100 - ((this->grade - 1) / 6) * 20;
     if(isMusicOn())
         QSound::play(QCoreApplication::applicationDirPath() + "/audio/ready_go.wav");
     this->game_over_canvas->hide();
     this->ptimer->start(1000);
+    this->boom->setData(1, QVariant(false));
     this->setGameStart(true);
+    this->resetGameText();
     setSquares();
+    this->ban_click = true;
 }
 
 void startInterface::resetSquareArray()
@@ -306,11 +398,19 @@ void startInterface::resetSquareArray()
     }
 }
 
+void startInterface::resetGameText()
+{
+    QString t = QString("%1").arg(this->time, 2, 10, QChar('0'));
+    this->time_text->setText(QString::fromLocal8Bit("时间：") + QString::number(this->time));
+    QString g = QString("%1").arg(this->grade, 2, 10, QChar('0'));
+    this->grade_text->setText(QString::fromLocal8Bit(("关卡：")) + g);
+    QString s = QString("%1").arg(this->score, 3, 10, QChar('0'));
+    this->score_text->setText(QString::fromLocal8Bit("得分：") + QString::number(this->score));
+}
+
 void startInterface::setSquares()
 {
     int square_num = 64;
-    this->time = 100;
-    this->time_text->setText(QString::fromLocal8Bit(("时间：100")));
     this->remain_square_num = square_num;
     QList<int> squareIndex;
     while(squareIndex.count() < square_num)
@@ -342,7 +442,11 @@ void startInterface::setSquares()
 
 void startInterface::search()
 {
-    qDebug() << "search!!!";
+    this->show_score_canvas->show();
+    this->start_btn->setAcceptHoverEvents(false);
+    this->search_btn->setAcceptHoverEvents(false);
+    this->exit_btn->setAcceptHoverEvents(false);
+    showScoreFromFile();
 }
 
 void startInterface::exit()
@@ -355,8 +459,7 @@ void startInterface::judgeAndUpdate(int order)
 {
     showSqaureArray();
     int order_index = this->square[order]->data(0).toInt();
-    qDebug() << "judge:order->" << QString::number(order) + " i and j:" + QString::number(this->square[order]->getI()) + " " + QString::number(this->square[order]->getJ());
-    if(this->isGameStart() == false) return;
+    if(this->isGameStart() == false || this->ban_click == false) return;
     if(this->boom->data(1).toInt() == true)
     {
         boomSquares(order);
@@ -439,7 +542,7 @@ void startInterface::judgeAndUpdate(int order)
 void startInterface::shuffle(bool used)
 {
     qDebug() << "shuffle...";
-    if(this->isGameStart() == false) return;
+    if(this->isGameStart() == false || this->ban_click == false) return;
     if(order1_tips != -1 && order2_tips != -1)
     {
         int tip1_index = this->square[order1_tips]->data(0).toInt();
@@ -471,6 +574,7 @@ void startInterface::shuffle(bool used)
             }
         }
     }
+    findIfThereIsAPair();
 }
 
 int startInterface::findOrderByIJ(int i, int j)
@@ -505,7 +609,7 @@ void startInterface::gameUpdate()
 
 void startInterface::findAPairThenTips()
 {
-    if(this->isGameStart() == false) return;
+    if(this->isGameStart() == false) return;if(this->isGameStart() == false || this->ban_click == false) return;
     this->tip->hide();
     this->tip_disabled->show();
     int order1 = -1, order2 = -1;
@@ -540,9 +644,11 @@ void startInterface::findAPair(int& order1, int& order2)
 
 void startInterface::findIfThereIsAPair()
 {
+    if(remain_square_num == 0 || remainOrders.count() == 0) return;
     int o1 = -1;
     int o2 = -1;
     findAPair(o1, o2);
+    qDebug() << "o1:" + QString::number(o1) + " o2:" + QString::number(o2);
     if(o1 == -1 || o2 == -1)
     {
         shuffle(false);
@@ -551,6 +657,7 @@ void startInterface::findIfThereIsAPair()
 
 void startInterface::gameOver(bool success)
 {
+    this->ban_click = false;
     this->ptimer->stop();
     if(success) {
         qDebug() << "success";
@@ -559,20 +666,82 @@ void startInterface::gameOver(bool success)
         this->game_pass_canvas->show();
         //this->setGameStart(false);
     }
-
     else
     {
         qDebug() << "failed";
         playSound(QCoreApplication::applicationDirPath() + "/audio/failed.wav");
         this->game_over_canvas->show();
         this->setGameStart(false);
+        QString s = QString("%1").arg(this->score, 3, 10, QChar('0'));
+        this->show_score_text->setText(QString::fromLocal8Bit("您的得分：") + s);
+        this->show_score_text->update();
+        this->show_score_canvas->update();
+        recordScoreInFile();
+    }
+}
+
+void startInterface::recordScoreInFile()
+{
+    QString path = QCoreApplication::applicationDirPath() + "/data/config.dat";
+    llkFile::creatFile("data", "config.dat");
+    QString pre_text = llkFile::readFile(path);
+    QString llk = pre_text.left(37);
+    judgeIfClearFile(pre_text);
+    QString text = pre_text.mid(37);
+    QString new_score = QString("%1").arg(this->score, 3, 10, QChar('0')) + "+" + QString::number(this->grade);
+    QList<QString> score_list = text.split(",");
+    if(text == "") score_list.clear();
+    score_list.append(new_score);
+    qSort(score_list.begin(),score_list.end(),[](const QString &a, const QString &b){if(a.split("+").at(0).toInt() > b.split("+").at(0).toInt()){return true;}return false;});
+    QString new_text = score_list.join(",");
+    llkFile::writeFile(path, llk + new_text);
+}
+
+void startInterface::showScoreFromFile()
+{
+    QString path = QCoreApplication::applicationDirPath() + "/data/config.dat";
+    llkFile::creatFile("data", "config.dat");
+    QString pre_text = llkFile::readFile(path);
+    judgeIfClearFile(pre_text);
+    QString text = pre_text.mid(37);
+    qDebug() << "content:" + text;
+    QList<QString> score_list = text.split(",");
+    if(text == "" || score_list.count() == 0) return;
+    qSort(score_list.begin(),score_list.end(),[](const QString &a, const QString &b){if(a.split("+").at(0).toInt() > b.split("+").at(0).toInt()){return true;}return false;});
+
+    QList<llkText*> text_list = {number1_text, number2_text, number3_text, number4_text, number5_text};
+    QStringList text_stringlist = {QString::fromLocal8Bit("第 一 名"), QString::fromLocal8Bit("第 二 名"), QString::fromLocal8Bit("第 三 名"),
+                                  QString::fromLocal8Bit("第 四 名"), QString::fromLocal8Bit("第 五 名"), };
+    for(int i = 0; i < 5 && i < score_list.count(); i++)
+    {
+        qDebug() << "score_list.at(i):" + score_list.at(i);
+        QString s = score_list.at(i).split("+").at(0);
+        QString g = score_list.at(i).split("+").at(1);
+        QString t = text_stringlist.at(i) + "          " + s + "               " + g;
+        text_list.at(i)->setText(t);
+        text_list.at(i)->update();
+    }
+    this->show_score_canvas->update();
+}
+
+void startInterface::judgeIfClearFile(QString& text)
+{
+    QString llk = text.left(37);
+    qDebug() << "llk:" + llk;
+    QString g = "this game is designed by Li Jianxiong";
+    if(llk != g)
+    {
+        qDebug() << "rewrite..";
+        llkFile::writeFile(QCoreApplication::applicationDirPath() + "/data/config.dat", g);
+        text = g;
     }
 }
 
 void startInterface::updateScore(int score)
 {
     this->score += score;
-    this->score_text->setText(QString::fromLocal8Bit("得分：") + QString::number(this->score));
+    QString s = QString("%1").arg(this->score, 3, 10, QChar('0'));
+    this->score_text->setText(QString::fromLocal8Bit("得分：") + s);
     this->game_canvas->update();
     this->score_text->update();
 }
@@ -788,12 +957,14 @@ void startInterface::boomSquares(int order)
         playSound(QCoreApplication::applicationDirPath() + "/audio/boom.wav");
         if(remain_square_num == 0)
             gameOver(true);
+        else
+            moveSquares(order, target);
     }
 }
 
 void startInterface::boom_judge(bool ready)
 {
-    if(this->isGameStart() == false) return;
+    if(this->isGameStart() == false || this->ban_click == false) return;
     if(selected_square != -1)
     {
         int selected_index = this->square[selected_square]->data(0).toInt();
@@ -835,13 +1006,15 @@ void startInterface::toNextCheckpoint()
 {
     this->grade ++;
     resetGameScene();
+    this->time = 100 - ((this->grade - 1) / 6) * 20;
+    resetGameText();
     if(isMusicOn())
         QSound::play(QCoreApplication::applicationDirPath() + "/audio/ready_go.wav");
     this->game_pass_canvas->hide();
-    QString g = QString("%1").arg(this->grade, 2, 10, QChar('0'));
-    this->grade_text->setText(QString::fromLocal8Bit(("关卡：")) + g);
     this->ptimer->start(1000);
+    this->boom->setData(1, QVariant(false));
     setSquares();
+    this->ban_click = true;
 }
 
 void startInterface::playSound(QString sound)
@@ -859,26 +1032,6 @@ bool startInterface::isMusicOn()
     return this->music_on;
 }
 
-void startInterface::setGameStart(bool start)
-{
-    this->game_start = start;
-}
-
-bool startInterface::isGameStart()
-{
-    return this->game_start;
-}
-
-void startInterface::setGrade(int grade)
-{
-    this->grade = grade;
-}
-
-int startInterface::getGrade()
-{
-    return this->grade;
-}
-
 void startInterface::disapearSquares()
 {
     this->route->hide();
@@ -887,6 +1040,11 @@ void startInterface::disapearSquares()
     this->square[order1]->hide();
     this->square[order2]->hide();
     this->disapearTimes->stop();
+    moveSquares(order1, order2);
+}
+
+void startInterface::moveSquares(int order1, int order2)
+{
     int difficult_grade = this->grade % 6;
     switch (difficult_grade)
     {
@@ -1137,7 +1295,6 @@ void startInterface::disapearSquares()
         case 0:
         {
             //middel
-qDebug() << "aaa";
             bool h_judge = this->square[order1]->getJ() == this->square[order2]->getJ()
                     && ((this->square[order1]->getI() > this->square[order2]->getI() && this->square[order1]->getI() <= 3)
                     || (this->square[order1]->getI() < this->square[order2]->getI() && this->square[order1]->getI() >= 4));
@@ -1150,7 +1307,6 @@ qDebug() << "aaa";
                 order1 = order2;
                 order2 = temp;
             }
-qDebug() << "bbb";
             int _i = this->square[order1]->getI();
             int _j = this->square[order1]->getJ();
             if(_i <= 3 && _j <= 3)
@@ -1220,7 +1376,7 @@ qDebug() << "bbb";
                     //down
                     for(int m = l; m <= 7; m++)
                     {
-                        for(int k = _j - 1; k >= 0 ; k++)
+                        for(int k = _j - 1; k >= 0 ; k--)
                         {
                             if(this->squareArray[k][m] == 1)
                             {
@@ -1317,7 +1473,6 @@ qDebug() << "bbb";
                     }
                 }
             }
-qDebug() << "ccc";
             _i = this->square[order2]->getI();
             _j = this->square[order2]->getJ();
             if(_i <= 3 && _j <= 3)
@@ -1387,7 +1542,7 @@ qDebug() << "ccc";
                     //down
                     for(int m = l; m <= 7; m++)
                     {
-                        for(int k = _j - 1; k >= 0 ; k++)
+                        for(int k = _j - 1; k >= 0 ; k--)
                         {
                             if(this->squareArray[k][m] == 1)
                             {
@@ -1489,3 +1644,24 @@ qDebug() << "ccc";
     }
     findIfThereIsAPair();
 }
+
+void startInterface::setGameStart(bool start)
+{
+    this->game_start = start;
+}
+
+bool startInterface::isGameStart()
+{
+    return this->game_start;
+}
+
+void startInterface::setGrade(int grade)
+{
+    this->grade = grade;
+}
+
+int startInterface::getGrade()
+{
+    return this->grade;
+}
+

@@ -47,7 +47,8 @@ int main(int argc, char *argv[])
     QObject::connect(hand, SIGNAL(exitGame()), &scene, SLOT(exit()));
     QObject::connect(hand, SIGNAL(showHistory()), &scene, SLOT(search()));
     QObject::connect(hand, SIGNAL(showSettingsInterface()), &scene, SLOT(setSettingInterface()));
-    QObject::connect(hand, SIGNAL(resetInterface()), &scene, SLOT(removeSettingButtons()));
+    QObject::connect(hand, SIGNAL(removeSettings()), &scene, SLOT(removeSettingButtons()));
+    QObject::connect(hand, SIGNAL(removeSearchpage()), &scene, SLOT(removeSearchpage()));
 
     return a.exec();
 }

@@ -6,6 +6,7 @@
 
 QT       += core gui widgets \
             multimedia
+RC_ICONS = llk_icon.ico
 
 TARGET = game_llk
 TEMPLATE = app
@@ -28,13 +29,15 @@ SOURCES += \
     startinterface.cpp \
     llkbutton.cpp \
     handler.cpp \
-    llksqure.cpp
+    llksqure.cpp \
+    llkfile.cpp
 
 HEADERS += \
     startinterface.h \
     llkbutton.h \
     handler.h \
-    llksqure.h
+    llksqure.h \
+    llkfile.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

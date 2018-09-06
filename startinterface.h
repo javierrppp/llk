@@ -26,6 +26,12 @@ public:
     void findIfThereIsAPair();
     void resetGameScene();
     int findOrderByIJ(int i, int j);
+    void moveSquares(int order1, int order2);
+    void resetGameText();
+    void recordScoreInFile();
+    void showScoreFromFile();
+    void judgeIfClearFile(QString& text);
+    void turn_around(bool back);
 private slots:
     void start();
     void exit();
@@ -36,6 +42,7 @@ private slots:
     void setStartInterface();
     void initStartInterface();
     void removeSettingButtons();
+    void removeSearchpage();
     void gameUpdate();
     void setSquares();
     void judgeAndUpdate(int order);
@@ -58,7 +65,10 @@ private:
     llkButton* search_btn;
     llkButton* exit_btn;
     QGraphicsPixmapItem* title;
-    assemble* arrow_img;
+    //assemble* arrow_img;
+    //assemble* arrow_img_search;
+    assemble* close_img;
+    assemble* close_img_search;
     assemble* volumn_img;
     assemble* ban_volumn_img;
     assemble* settings;
@@ -78,6 +88,7 @@ private:
     llkcanvas* game_canvas;
     llkcanvas* game_over_canvas;
     llkcanvas* game_pass_canvas;
+    llkcanvas* show_score_canvas;
     QTimer* ptimer;
     QTimer* disapearTimes;
     QSound* bgm;
@@ -87,13 +98,22 @@ private:
     llkText* score_text;
     llkText* grade_text;
     llkText* game_over_text;
+    llkText* show_score_text;
     llkText* game_pass_text;
+    llkText* search_score_text;
+    llkText* table_head;
+    llkText* number1_text;
+    llkText* number2_text;
+    llkText* number3_text;
+    llkText* number4_text;
+    llkText* number5_text;
     int time;
     int score;
     int remain_square_num;
     QList<int> remainOrders;
     bool music_on;
     bool game_start;
+    bool ban_click;
 
     int selected_square;
     int order1_tips;

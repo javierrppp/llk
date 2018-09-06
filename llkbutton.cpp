@@ -49,23 +49,26 @@ void llkButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 void llkButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    handler* hand = handler::getInstance();
     this->btn_color = new QColor(42,55,77);
     this->update();
-    if(this->data(0).toString() == "start")
-        hand->tellStart();
-    else if(this->data(0).toString() == "search")
-        hand->tellShowHistory();
-    else if(this->data(0).toString() == "exit")
-        hand->tellExit();
-    else if(this->data(0).toString() == "refresh")
-        ;
 
 }
 void llkButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    this->btn_color = new QColor(246,3,255);
+    handler* hand = handler::getInstance();
+    this->btn_color = new QColor(0,198,255);
     this->update();
+    int x = event->pos().x();
+    int y = event->pos().y();
+    if(x > -15.5 && x < this->boundingRect().width() && y > -15.5 && y < this->boundingRect().height())
+    {
+        if(this->data(0).toString() == "start")
+            hand->tellStart();
+        else if(this->data(0).toString() == "search")
+            hand->tellShowHistory();
+        else if(this->data(0).toString() == "exit")
+            hand->tellExit();
+    }
 }
 void llkButton::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
@@ -276,8 +279,8 @@ void assemble::mousePressEvent(QGraphicsSceneMouseEvent *event)
     handler* hand = handler::getInstance();
     if(this->data(0).toString() == "settings")
         hand->tellSettings();
-    else if(this->data(0).toString() == "arrow")
-        hand->tellReset();
+    else if(this->data(0).toString() == "close")
+        hand->tellReset(this->data(2).toInt());
     else if(this->data(0).toString() == "volumn")
         hand->tellModifyVolumn(false);
     else if(this->data(0).toString() == "ban_volumn")

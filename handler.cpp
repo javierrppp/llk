@@ -31,9 +31,12 @@ void handler::tellSettings()
     emit showSettingsInterface();
 }
 
-void handler::tellReset()
+void handler::tellReset(int type)
 {
-    emit resetInterface();
+    if(type == 0)
+        emit removeSettings();
+    else
+        emit removeSearchpage();
 }
 
 void handler::tellTheSelectOrder(int order)

@@ -30,6 +30,8 @@
         <file>img/play_again_hover.png</file>
         <file>img/game_home.png</file>
         <file>img/game_home_hover.png</file>
+        <file>img/close.png</file>
+        <file>img/close_hover.png</file>
     </qresource>
     <qresource prefix="/square/pokemon/init">
         <file>img/pokemon/init/1.png</file>
@@ -96,5 +98,8 @@
         <file>img/pokemon/tips/18.png</file>
         <file>img/pokemon/tips/19.png</file>
         <file>img/pokemon/tips/20.png</file>
+    </qresource>
+    <qresource prefix="/square">
+        <file>img/pokemon/back.png</file>
     </qresource>
 </RCC>

@@ -12,7 +12,7 @@ public:
     void tellExit();
     void tellShowHistory();
     void tellSettings();
-    void tellReset();
+    void tellReset(int type);
     void tellModifyVolumn(bool on);
     void tellPlaySound(QString path);
     void tellRefresh(bool used=true);
@@ -35,7 +35,8 @@ signals:
     void exitGame();
     void showHistory();
     void showSettingsInterface();
-    void resetInterface();
+    void removeSettings();
+    void removeSearchpage();
     void modifyVolumn(bool on);
     void playSound(QString path);
     void refresh(bool used);
